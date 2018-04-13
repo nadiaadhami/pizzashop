@@ -16,7 +16,7 @@ var verbose = false
 func main() {
 	a := parseCommandLineArgs()
 	verbose = a.verbose
-	if (a.max > a.numPizzas) {
+	if (a.incr > 0 && a.max > a.numPizzas) {
 		for i := 0 ; i<a.max ; i++ {
 			numPizzas := a.numPizzas + (a.incr * i)
 			makePizza(numPizzas, a.numStations)

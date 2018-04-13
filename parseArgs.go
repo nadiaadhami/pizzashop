@@ -14,10 +14,10 @@ type args struct {
 }
 
 func parseCommandLineArgs() args {
-	numChefs := 3   //defaults
-	numPizzas := 10
-	incr := 10
-	max := 1000
+	numChefs := 1   //defaults
+	numPizzas := 1
+	incr := 0
+	max := 0
 	verbose := false
 	argsWithoutProg := os.Args[1:]
 	pr(argsWithoutProg)
