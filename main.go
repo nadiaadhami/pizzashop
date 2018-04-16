@@ -45,11 +45,11 @@ func makePizza(numPizza int, numStations int) {
 	timeTrack(start, "makePizza", numPizza, numStations)
 }
 func getDuration() time.Duration {
-	return time.Duration(rand.Intn(100))
+	return time.Duration(rand.Intn(1000))
 }
 func timeTrack(start time.Time, name string, numPizzas int, numStations int) {
 	elapsed := time.Since(start)
-	pf("%s numStations:%d numPizzas:%d took %s\n", name, numStations, numPizzas, elapsed)
+	pf("%s	numStations:%d	numPizzas:%d	Duration:%s\n", name, numStations, numPizzas, elapsed)
 }
 func prettyJsonPrint (a interface{}) {
 	out, err := json.Marshal(a)

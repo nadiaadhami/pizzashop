@@ -31,7 +31,7 @@ func addToppings(fromChannel  chan string, toChannel chan bool){
 		};
 		time.Sleep(time.Millisecond * getDuration())
 		cnt--
-		if (cnt == 0) {
+		if (cnt <= 0) {
 			if verbose {
 				pr("done!")
 			}

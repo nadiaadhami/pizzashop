@@ -16,7 +16,6 @@ func parseCommandLineArgs() args {
 	numPizzas := 1
 	verbose := false
 	argsWithoutProg := os.Args[1:]
-	pr(argsWithoutProg)
 	for i := range argsWithoutProg {
 		switch argsWithoutProg[i] {
 		case "-station":
@@ -28,13 +27,10 @@ func parseCommandLineArgs() args {
 		case "-p":
 			numPizzas, _ = strconv.Atoi(argsWithoutProg[i+1])
 		case "-v":
-			v := argsWithoutProg[i+1]
-			if v == "Y" || v == "YES" {
-				verbose = true
-			}
+			verbose = true
+		default:
 		}
 	}
-	pr("numStations:", numStations, "numPizzas:", numPizzas, "verbose:",verbose )
 	a := args{numPizzas, numStations, verbose }
 	return a
 }
