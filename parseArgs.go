@@ -8,29 +8,25 @@ import (
 type args struct {
 	numPizzas   int
 	numStations int
-	incr int
-	max int
 	verbose bool
 }
 
 func parseCommandLineArgs() args {
-	numChefs := 1   //defaults
+	numStations := 1 //defaults
 	numPizzas := 1
-	incr := 0
-	max := 0
 	verbose := false
 	argsWithoutProg := os.Args[1:]
 	pr(argsWithoutProg)
 	for i := range argsWithoutProg {
 		switch argsWithoutProg[i] {
-		case "-chef":
-			numChefs, _ = strconv.Atoi(argsWithoutProg[i+1])
+		case "-station":
+			numStations, _ = strconv.Atoi(argsWithoutProg[i+1])
+		case "-s":
+			numStations, _ = strconv.Atoi(argsWithoutProg[i+1])
 		case "-pizza":
 			numPizzas, _ = strconv.Atoi(argsWithoutProg[i+1])
-		case "-incr":
-			incr, _ = strconv.Atoi(argsWithoutProg[i+1])
-		case "-max":
-			max, _ = strconv.Atoi(argsWithoutProg[i+1])
+		case "-p":
+			numPizzas, _ = strconv.Atoi(argsWithoutProg[i+1])
 		case "-v":
 			v := argsWithoutProg[i+1]
 			if v == "Y" || v == "YES" {
@@ -38,7 +34,7 @@ func parseCommandLineArgs() args {
 			}
 		}
 	}
-	pr("numStations:", numChefs, "numPizzas:", numPizzas, "incr:", incr, "max:", max, "verbose:",verbose )
-	a := args{numPizzas, numChefs, incr, max, verbose }
+	pr("numStations:", numStations, "numPizzas:", numPizzas, "verbose:",verbose )
+	a := args{numPizzas, numStations, verbose }
 	return a
 }
