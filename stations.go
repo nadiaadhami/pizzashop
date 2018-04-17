@@ -39,13 +39,14 @@ func addToppings(fromChannel  chan string, toChannel chan int64){
 		addDurationToOrder(order, d)
 		var ms = int64(d)
 		cookingTime += ms
-		pr("cookingTime", cookingTime)
+		//pr("cookingTime", cookingTime)
 		cnt--
 		if (cnt <= 0) {
 			if verbose {
 				pr("done!")
 			}
 			toChannel <- cookingTime
+			return
 		}
 	}
 }

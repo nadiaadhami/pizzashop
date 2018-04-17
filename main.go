@@ -30,7 +30,7 @@ func makePizza(numPizza int, numStations int) {
 		go addSauce(sauceChan, toppingChan)
 		go addToppings(toppingChan, done)
 	}
-
+	time.Sleep(1000)
 	for i := 0; i < numPizza; i++{
 		cnt++
 		order := getOrder(i)
@@ -39,6 +39,11 @@ func makePizza(numPizza int, numStations int) {
 		}
 		doughChan <- order
 	}
+	// if we don't close the channels the range loops will never finish
+	close (doughChan)
+	close (sauceChan)
+	close (toppingChan)
+
 	c := <- done
 	timeTrack(start, "makePizza", numPizza, numStations, c)
 }
