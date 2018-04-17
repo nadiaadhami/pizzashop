@@ -1,41 +1,51 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 func makeDough(fromChannel  chan string, toChannel chan string) {
 	for order := range fromChannel{
-		o := parseOrder(order)
+		o := convertStringToOrder(order)
 		if verbose {
 			pr(o.name,"Make",o.dough,"Dough and Send for Sauce")
 		};
-		time.Sleep(time.Millisecond * getDuration())
+		d := time.Millisecond * getRandomDuration()
+		time.Sleep(d)
+		addDurationToOrder(order, d)
 		toChannel <- order
 	}
 }
 func addSauce(fromChannel  chan string, toChannel chan string){
 	for order := range fromChannel{
-		o := parseOrder(order)
+		o := convertStringToOrder(order)
 		if verbose {
 			pr(o.name,"Add",o.sauce,"Sauce and Send for Topping")
 		};
-		s := time.Millisecond * getDuration()
-		time.Sleep(s)
+		d := time.Millisecond * getRandomDuration()
+		time.Sleep(d)
+		addDurationToOrder(order, d)
 		toChannel <- order
 	}
 }
-func addToppings(fromChannel  chan string, toChannel chan bool){
+func addToppings(fromChannel  chan string, toChannel chan int64){
 	for order := range fromChannel{
-		o := parseOrder(order)
+		o := convertStringToOrder(order)
 		if verbose {
 			pr(o.name,"Add ",o.topping,"Topping",)
 		};
-		time.Sleep(time.Millisecond * getDuration())
+		d := time.Millisecond * getRandomDuration()
+		time.Sleep(d)
+		addDurationToOrder(order, d)
+		var ms = int64(d)
+		cookingTime += ms
+		pr("cookingTime", cookingTime)
 		cnt--
 		if (cnt <= 0) {
 			if verbose {
 				pr("done!")
 			}
-			toChannel <- true
+			toChannel <- cookingTime
 		}
 	}
 }
