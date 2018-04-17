@@ -9,24 +9,29 @@ import (
 )
 
 func getRandomDuration() time.Duration {
-	return time.Duration(rand.Intn(1000))
+	return time.Duration(rand.Intn(100))
 }
 func timeTrack(start time.Time, name string, numPizzas int, numStations int, cookingTime int64) {
 	elapsed := time.Since(start)
 	elapsedMs := int64(elapsed)
 	cookingTimeMs := cookingTime/1000000
-	pf("%s numStations:%d numPizzas:%d Duration:%s CookingTime:%d (CookingTime:%d%% GoRoutines:%d%%)\n",
+	cookingPercentage := (cookingTime * 100)/elapsedMs
+	processingPercentage := ((elapsedMs - cookingTime) * 100)/elapsedMs
+	pf("%s Stations:%d Pizzas:%d Duration:%s CookingTime:%d (CookingTime:%.2f%% GoRoutines:%.2f%%)\n",
 		name, numStations, numPizzas, elapsed, cookingTimeMs,
-		(cookingTime * 100)/elapsedMs,
-		((elapsedMs - cookingTime) * 100)/elapsedMs)
+		float64(cookingPercentage),
+		float64(processingPercentage))
 }
 func addDurationToOrder(s string, d time.Duration) string {
+	pr("addDurationToOrder", s, d)
 	o := convertStringToOrder(s)
 	var ms1 = int64(d)
 	ms2, _ := strconv.ParseInt(o.duration, 10, 64)
 	t := ms1+ms2
 	o.duration = strconv.FormatInt(t, 10)
-	return s
+	s2 := convertOrderToString(o)
+	pr("addDurationToOrder", s2)
+	return s2
 }
 func convertStringToOrder(s string) order {
 	result := strings.Split(s, "|")
