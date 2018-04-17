@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 	"fmt"
+	"math"
 )
 
 var cnt = 0
@@ -30,19 +31,17 @@ func makePizza(numPizza int, numStations int) {
 		go addSauce(sauceChan, toppingChan)
 		go addToppings(toppingChan, done)
 	}
-	time.Sleep(1000)
 	for i := 0; i < numPizza; i++{
 		cnt++
 		order := getOrder(i)
-		if verbose {
+		if verbose && math.Mod(float64(i), 50) == 0{
 			pr(i, order)
 		}
 		doughChan <- order
 	}
-	// if we don't close the channels the range loops will never finish
-	close (doughChan)
-	close (sauceChan)
-	close (toppingChan)
+	defer close (doughChan)
+	defer close (sauceChan)
+	defer close (toppingChan)
 
 	c := <- done
 	timeTrack(start, "makePizza", numPizza, numStations, c)

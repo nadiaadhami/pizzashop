@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	"math"
 )
 
 func makeDough(fromChannel  chan string, toChannel chan string) {
@@ -47,6 +48,8 @@ func addToppings(fromChannel  chan string, toChannel chan int64){
 			}
 			toChannel <- cookingTime
 			return
+		} else if (math.Mod(float64(cnt), 100) == 0) {
+			pr(order)
 		}
 	}
 }
