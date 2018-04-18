@@ -39,9 +39,7 @@ func addToppings(fromChannel  chan order, toChannel chan bool){
 		pr("====== cookingTime", cookingTime, order)
 		cnt++
 		if cnt >= numPizzas {
-			if verbose {
-				pr("done!")
-			}
+			pr("done!", time.Now())
 			toChannel <- true //todo send the final order
 		}
 	}

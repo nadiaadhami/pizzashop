@@ -8,7 +8,7 @@ import (
 var cnt = 0
 var pr = fmt.Println
 var pf = fmt.Printf
-var verbose = true
+var verbose = false
 var cookingTime time.Duration = 0
 var numPizzas = 0
 
@@ -19,14 +19,16 @@ func main() {
 	makePizza(a)
 }
 func makePizza(a args) {
-	pr("makePizza numPizzas:",a.numPizzas, "numStations:", a.numStations)
+	pr("makePizza numPizzas:",a.numPizzas, "numStations:", a.numStations, "verbose:", a.verbose)
+	start := time.Now()
+	pr("Now", start)
+
 	// CHANNELS allow us to pass data between go routines
 	doughChan 	:= make(chan order)
 	sauceChan 	:= make(chan order)
 	toppingChan := make(chan order)
 	done 		:= make(chan bool)
 
-	start := time.Now()
 	for i := 0; i < a.numStations; i++ {
 		go makeDough(doughChan, sauceChan)
 		go addSauce(sauceChan, toppingChan)
