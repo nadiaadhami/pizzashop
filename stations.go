@@ -35,8 +35,10 @@ func addToppings(fromChannel  chan order, toChannel chan bool){
 		time.Sleep(d)
 		addDurationToOrder(&order, d)
 
+		//todo why is cumulative cooking time more than duration time?
 		cookingTime = cookingTime + order.duration // all orders
-		pr("====== cookingTime", cookingTime, order)
+		//pr("====== cookingTime", cookingTime, order)
+
 		cnt++
 		if cnt >= numPizzas {
 			pr("done!", time.Now())
