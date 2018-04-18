@@ -2,53 +2,47 @@ package main
 
 import (
 	"time"
-	"math"
-	"strconv"
 )
 
-func makeDough(fromChannel  chan string, toChannel chan string) {
+func makeDough(fromChannel  chan order, toChannel chan order) {
 	for order := range fromChannel{
 		if verbose {
 			pr(order, "Make Dough and send for Sauce")
-		};
+		}
 		d := time.Millisecond * getRandomDuration()
 		time.Sleep(d)
-		n := addDurationToOrder(order, d)
-		toChannel <- n
+		addDurationToOrder(&order, d)
+		toChannel <- order
 	}
 }
-func addSauce(fromChannel  chan string, toChannel chan string){
+func addSauce(fromChannel  chan order, toChannel chan order){
 	for order := range fromChannel{
 		if verbose {
 			pr(order,"Add Sauce and Send for Topping")
-		};
+		}
 		d := time.Millisecond * getRandomDuration()
 		time.Sleep(d)
-		n := addDurationToOrder(order, d)
-		toChannel <- n
+		addDurationToOrder(&order, d)
+		toChannel <- order
 	}
 }
-func addToppings(fromChannel  chan string, toChannel chan int64){
+func addToppings(fromChannel  chan order, toChannel chan bool){
 	for order := range fromChannel{
 		if verbose {
-			pr(order,"Add Topping",)
-		};
+			pr(order,"Add Topping")
+		}
 		d := time.Millisecond * getRandomDuration()
 		time.Sleep(d)
-		n := addDurationToOrder(order, d)
-		o := convertStringToOrder(n)
-		i, _ := strconv.ParseInt(o.duration, 10, 64)
-		cookingTime += i
-		pr("cookingTime", cookingTime, order)
+		addDurationToOrder(&order, d)
+
+		cookingTime = cookingTime + order.duration
+		pr("====== cookingTime", cookingTime)
 		cnt--
-		if (cnt <= 0) {
+		if cnt <= 0 {
 			if verbose {
 				pr("done!")
 			}
-			toChannel <- cookingTime
-			return
-		} else if (math.Mod(float64(cnt), 100) == 0) {
-			pr(order)
+			toChannel <- true
 		}
 	}
 }

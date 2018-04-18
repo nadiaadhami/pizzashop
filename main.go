@@ -3,14 +3,13 @@ package main
 import (
 	"time"
 	"fmt"
-	"math"
 )
 
 var cnt = 0
 var pr = fmt.Println
 var pf = fmt.Printf
-var verbose = false
-var cookingTime int64 = 0
+var verbose = true
+var cookingTime time.Duration = 0
 
 func main() {
 	a := parseCommandLineArgs()
@@ -20,10 +19,10 @@ func main() {
 func makePizza(numPizza int, numStations int) {
 	pr("makePizza numPizzas:",numPizza, "numStations:", numStations)
 	// CHANNELS allow us to pass data between go routines
-	doughChan 	:= make(chan string)
-	sauceChan 	:= make(chan string)
-	toppingChan := make(chan string)
-	done 		:= make(chan int64)
+	doughChan 	:= make(chan order)
+	sauceChan 	:= make(chan order)
+	toppingChan := make(chan order)
+	done 		:= make(chan bool)
 
 	start := time.Now()
 	for i := 0; i < numStations; i++ {
@@ -34,15 +33,14 @@ func makePizza(numPizza int, numStations int) {
 	for i := 0; i < numPizza; i++{
 		cnt++
 		order := getOrder(i)
-		if verbose && math.Mod(float64(i), 50) == 0{
+		if verbose {
 			pr(i, order)
 		}
 		doughChan <- order
 	}
-	defer close (doughChan)
-	defer close (sauceChan)
-	defer close (toppingChan)
+	//defer close (doughChan)
+	//defer close (sauceChan)
+	//defer close (toppingChan)
 
-	c := <- done
-	timeTrack(start, "makePizza", numPizza, numStations, c)
+	timeTrack(start, numPizza, numStations, cookingTime)
 }

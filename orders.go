@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"encoding/json"
 	"strconv"
+	"time"
 )
 
 type order struct {
@@ -11,7 +12,7 @@ type order struct {
 	dough string
 	sauce string
 	topping string
-	duration string
+	duration time.Duration
 }
 
 func (o *order) string() string {
@@ -22,9 +23,11 @@ func (o *order) string() string {
 	return(string(out))
 }
 
-func getOrder(i int) string {
-	return "Pizza"+strconv.Itoa(i)+"|"+getDough() + "|" + getSauce() + "|" + getTopping() + "|0"
+func getOrder(i int) order {
+	o := order {"Pizza"+strconv.Itoa(i), getDough(), getSauce(), getTopping(), 0}
+	return o
 }
+
 func getSauce() string {
 	r := rand.Intn(3)
 	switch r {
