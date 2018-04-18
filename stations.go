@@ -35,14 +35,14 @@ func addToppings(fromChannel  chan order, toChannel chan bool){
 		time.Sleep(d)
 		addDurationToOrder(&order, d)
 
-		cookingTime = cookingTime + order.duration
-		pr("====== cookingTime", cookingTime)
-		cnt--
-		if cnt <= 0 {
+		cookingTime = cookingTime + order.duration // all orders
+		pr("====== cookingTime", cookingTime, order)
+		cnt++
+		if cnt >= numPizzas {
 			if verbose {
 				pr("done!")
 			}
-			toChannel <- true
+			toChannel <- true //todo send the final order
 		}
 	}
 }

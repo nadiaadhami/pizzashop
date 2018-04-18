@@ -10,14 +10,16 @@ var pr = fmt.Println
 var pf = fmt.Printf
 var verbose = true
 var cookingTime time.Duration = 0
+var numPizzas = 0
 
 func main() {
 	a := parseCommandLineArgs()
 	verbose = a.verbose
-	makePizza(a.numPizzas, a.numStations)
+	numPizzas = a.numPizzas
+	makePizza(a)
 }
-func makePizza(numPizza int, numStations int) {
-	pr("makePizza numPizzas:",numPizza, "numStations:", numStations)
+func makePizza(a args) {
+	pr("makePizza numPizzas:",a.numPizzas, "numStations:", a.numStations)
 	// CHANNELS allow us to pass data between go routines
 	doughChan 	:= make(chan order)
 	sauceChan 	:= make(chan order)
@@ -25,22 +27,23 @@ func makePizza(numPizza int, numStations int) {
 	done 		:= make(chan bool)
 
 	start := time.Now()
-	for i := 0; i < numStations; i++ {
+	for i := 0; i < a.numStations; i++ {
 		go makeDough(doughChan, sauceChan)
 		go addSauce(sauceChan, toppingChan)
 		go addToppings(toppingChan, done)
 	}
-	for i := 0; i < numPizza; i++{
-		cnt++
+	for i := 0; i < a.numPizzas; i++{
 		order := getOrder(i)
 		if verbose {
 			pr(i, order)
 		}
 		doughChan <- order
 	}
+	//todo
 	//defer close (doughChan)
 	//defer close (sauceChan)
 	//defer close (toppingChan)
+	 <- done
 
-	timeTrack(start, numPizza, numStations, cookingTime)
+	timeTrack(start, a.numPizzas, a.numStations, cookingTime)
 }

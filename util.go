@@ -7,7 +7,7 @@ import (
 )
 
 func getRandomDuration() time.Duration {
-	return time.Duration(rand.Intn(100))
+	return time.Duration(rand.Intn(1000))
 }
 func timeTrack(start time.Time, numPizzas int, numStations int, cookingTime time.Duration) {
 	elapsed := time.Since(start)
@@ -23,7 +23,7 @@ func timeTrack(start time.Time, numPizzas int, numStations int, cookingTime time
 }
 func addDurationToOrder(o *order, d time.Duration) {
 	o.duration = o.duration + d
-	pr("addDurationToOrder", o)
+	//pr("addDurationToOrder", o)
 }
 func prettyJsonPrint (a interface{}) {
 	out, err := json.Marshal(a)
