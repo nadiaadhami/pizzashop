@@ -19,9 +19,9 @@ func main() {
 	makePizza(a)
 }
 func makePizza(a args) {
-	pr("makePizza numPizzas:",a.numPizzas, "numStations:", a.numStations, "verbose:", a.verbose)
 	start := time.Now()
-	pr("Now", start)
+
+	pr("makePizza numPizzas:",a.numPizzas, "numStations:", a.numStations, "verbose:", a.verbose, start)
 
 	// CHANNELS allow us to pass data between go routines
 	doughChan 	:= make(chan order)
