@@ -3,19 +3,17 @@ package main
 import (
 	"time"
 	"fmt"
+	"sync"
 )
 
-var cnt = 0
 var pr = fmt.Println
 var pf = fmt.Printf
-var verbose = false
 var cookingTime time.Duration = 0
-var numPizzas = 0
+var wg sync.WaitGroup
+var verbose = false
 
 func main() {
 	a := parseCommandLineArgs()
-	verbose = a.verbose
-	numPizzas = a.numPizzas
 	makePizza(a)
 }
 func makePizza(a args) {
@@ -27,25 +25,20 @@ func makePizza(a args) {
 	doughChan 	:= make(chan order)
 	sauceChan 	:= make(chan order)
 	toppingChan := make(chan order)
-	done 		:= make(chan bool)
 
 	for i := 0; i < a.numStations; i++ {
 		go makeDough(doughChan, sauceChan)
 		go addSauce(sauceChan, toppingChan)
-		go addToppings(toppingChan, done)
+		go addToppings(toppingChan)
 	}
 	for i := 0; i < a.numPizzas; i++{
 		order := getOrder(i)
-		if verbose {
+		if a.verbose {
 			pr(i, order)
 		}
 		doughChan <- order
 	}
-	//todo
-	//defer close (doughChan)
-	//defer close (sauceChan)
-	//defer close (toppingChan)
-	 <- done
+	wg.Wait()
 
 	timeTrack(start, a.numPizzas, a.numStations, cookingTime)
 }
