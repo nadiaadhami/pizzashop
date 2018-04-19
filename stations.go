@@ -6,6 +6,7 @@ import (
 
 func makeDough(fromChannel  chan order, toChannel chan order) {
 	for order := range fromChannel{
+		wg.Add(1)
 		if verbose {
 			pr(order, "Make Dough and send for Sauce")
 		}
@@ -13,10 +14,12 @@ func makeDough(fromChannel  chan order, toChannel chan order) {
 		time.Sleep(d)
 		addDurationToOrder(&order, d)
 		toChannel <- order
+		wg.Done()
 	}
 }
 func addSauce(fromChannel  chan order, toChannel chan order){
 	for order := range fromChannel{
+		wg.Add(1)
 		if verbose {
 			pr(order,"Add Sauce and Send for Topping")
 		}
@@ -24,10 +27,12 @@ func addSauce(fromChannel  chan order, toChannel chan order){
 		time.Sleep(d)
 		addDurationToOrder(&order, d)
 		toChannel <- order
+		wg.Done()
 	}
 }
-func addToppings(fromChannel  chan order, toChannel chan bool){
+func addToppings(fromChannel  chan order){
 	for order := range fromChannel{
+		wg.Add(1)
 		if verbose {
 			pr(order,"Add Topping")
 		}
@@ -39,10 +44,6 @@ func addToppings(fromChannel  chan order, toChannel chan bool){
 		cookingTime = cookingTime + order.duration // all orders
 		//pr("====== cookingTime", cookingTime, order)
 
-		cnt++
-		if cnt >= numPizzas {
-			pr("done!", time.Now())
-			toChannel <- true //todo send the final order
-		}
+		wg.Done()
 	}
 }

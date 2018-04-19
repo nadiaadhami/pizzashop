@@ -14,6 +14,7 @@ type args struct {
 func parseCommandLineArgs() args {
 	numStations := 1 //defaults
 	numPizzas := 1
+	verbose := false
 	argsWithoutProg := os.Args[1:]
 	for i := range argsWithoutProg {
 		switch argsWithoutProg[i] {
