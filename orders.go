@@ -2,8 +2,9 @@ package main
 
 import (
 	"math/rand"
-	"strings"
 	"encoding/json"
+	"strconv"
+	"time"
 )
 
 type order struct {
@@ -11,6 +12,7 @@ type order struct {
 	dough string
 	sauce string
 	topping string
+	duration time.Duration
 }
 
 func (o *order) string() string {
@@ -21,10 +23,11 @@ func (o *order) string() string {
 	return(string(out))
 }
 
-// create pizza orders with random dough, sauce, and topping
-func getOrder() string {
-	return getDough() + "|" + getSauce() + "|" + getTopping()
+func getOrder(i int) order {
+	o := order {"Pizza"+strconv.Itoa(i), getDough(), getSauce(), getTopping(), 0}
+	return o
 }
+
 func getSauce() string {
 	r := rand.Intn(3)
 	switch r {
@@ -51,9 +54,4 @@ func getDough() string {
 	case 2: return "Neapolitan"
 	default: panic(r)
 	}
-}
-func parseOrder(s string) order {
-	result := strings.Split(s, "|")
-	o := order {result[0], result[1], result[2], result[3]}
-	return o
 }

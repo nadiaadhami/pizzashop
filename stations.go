@@ -1,41 +1,48 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
-func makeDough(fromChannel  chan string, toChannel chan string) {
+func makeDough(fromChannel  chan order, toChannel chan order) {
 	for order := range fromChannel{
-		o := parseOrder(order)
 		if verbose {
-			pr(o.name,"Make",o.dough,"Dough and Send for Sauce")
-		};
-		time.Sleep(time.Millisecond * getDuration())
+			pr(order, "Make Dough and send for Sauce")
+		}
+		d := time.Millisecond * getRandomDuration()
+		time.Sleep(d)
+		addDurationToOrder(&order, d)
 		toChannel <- order
 	}
 }
-func addSauce(fromChannel  chan string, toChannel chan string){
+func addSauce(fromChannel  chan order, toChannel chan order){
 	for order := range fromChannel{
-		o := parseOrder(order)
 		if verbose {
-			pr(o.name,"Add",o.sauce,"Sauce and Send for Topping")
-		};
-		s := time.Millisecond * getDuration()
-		time.Sleep(s)
+			pr(order,"Add Sauce and Send for Topping")
+		}
+		d := time.Millisecond * getRandomDuration()
+		time.Sleep(d)
+		addDurationToOrder(&order, d)
 		toChannel <- order
 	}
 }
-func addToppings(fromChannel  chan string, toChannel chan bool){
+func addToppings(fromChannel  chan order, toChannel chan bool){
 	for order := range fromChannel{
-		o := parseOrder(order)
 		if verbose {
-			pr(o.name,"Add ",o.topping,"Topping",)
-		};
-		time.Sleep(time.Millisecond * getDuration())
-		cnt--
-		if (cnt == 0) {
-			if verbose {
-				pr("done!")
-			}
-			toChannel <- true
+			pr(order,"Add Topping")
+		}
+		d := time.Millisecond * getRandomDuration()
+		time.Sleep(d)
+		addDurationToOrder(&order, d)
+
+		//todo why is cumulative cooking time more than duration time?
+		cookingTime = cookingTime + order.duration // all orders
+		//pr("====== cookingTime", cookingTime, order)
+
+		cnt++
+		if cnt >= numPizzas {
+			pr("done!", time.Now())
+			toChannel <- true //todo send the final order
 		}
 	}
 }
